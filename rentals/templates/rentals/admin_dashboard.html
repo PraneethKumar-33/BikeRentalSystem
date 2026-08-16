@@ -1,0 +1,56 @@
+{% extends 'rentals/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 mt-3">
+    <h2><i class="fas fa-tools text-dark me-2"></i>Inventory Management</h2>
+    <a href="{% url 'add_bike' %}" class="btn btn-success fw-bold">
+        <i class="fas fa-plus me-2"></i> Add New Bike
+    </a>
+</div>
+
+<div class="card shadow">
+    <div class="card-body p-0">
+        <table class="table table-hover table-striped mb-0 align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Image</th>
+                    <th>Bike Details</th>
+                    <th>Price/Day</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bike in bikes %}
+                <tr>
+                    <td>
+                        <img src="{% if bike.image_url %}{{ bike.image_url }}{% else %}https://via.placeholder.com/100{% endif %}" 
+                             style="width: 60px; height: 40px; object-fit: cover; border-radius: 5px;">
+                    </td>
+                    <td>
+                        <strong>{{ bike.make }} {{ bike.model }}</strong><br>
+                        <small class="text-muted">{{ bike.year }}</small>
+                    </td>
+                    <td>${{ bike.daily_rate }}</td>
+                    <td>
+                        {% if bike.availability %}
+                            <span class="badge bg-success">Available</span>
+                        {% else %}
+                            <span class="badge bg-danger">Rented</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <a href="{% url 'edit_bike' bike.id %}" class="btn btn-sm btn-warning">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'delete_bike' bike.id %}" class="btn btn-sm btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

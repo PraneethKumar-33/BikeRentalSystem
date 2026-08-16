@@ -1,0 +1,51 @@
+{% extends 'rentals/base.html' %}
+
+{% block content %}
+<div class="card shadow mt-4">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0"><i class="fas fa-list-ul me-2"></i>My Active Rentals</h4>
+    </div>
+    <div class="card-body">
+        {% if bookings %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Bike</th>
+                        <th>Dates</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr>
+                        <td>
+                            <strong>{{ booking.bike.make }} {{ booking.bike.model }}</strong><br>
+                            <small class="text-muted">{{ booking.bike.year }} Model</small>
+                        </td>
+                        <td>
+                            {{ booking.start_date }} <i class="fas fa-arrow-right mx-1 text-muted"></i> {{ booking.end_date }}
+                        </td>
+                        <td>
+                            <span class="badge bg-warning text-dark">Active</span>
+                        </td>
+                        <td>
+                            <a href="{% url 'return_bike' booking.id %}" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-undo me-1"></i> Return Bike
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <div class="text-center py-5">
+                <p class="text-muted mb-3">You haven't booked any bikes yet.</p>
+                <a href="{% url 'index' %}" class="btn btn-primary">Go to Home</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends 'rentals/base.html' %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-md-5 mb-4">
+        <div class="card shadow border-0">
+            <img src="{% if bike.image_url %}{{ bike.image_url }}{% else %}https://images.unsplash.com/photo-1558981806-ec527fa84c3d?auto=format&fit=crop&w=800&q=80{% endif %}" 
+                 class="card-img-top" style="height: 350px; object-fit: cover;">
+            
+            <div class="card-body">
+                <h2 class="fw-bold">{{ bike.make }} {{ bike.model }}</h2>
+                
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <span class="badge bg-warning text-dark fs-5">${{ bike.daily_rate }} / day</span>
+                    <span class="text-warning fw-bold">
+                        <i class="fas fa-star"></i> {{ avg_rating }} / 5.0
+                    </span>
+                </div>
+                
+                <hr>
+                
+                <p class="text-muted">
+                    <i class="fas fa-info-circle me-2"></i>{{ bike.year }} Model. 
+                    Maintained weekly. Includes helmet and basic insurance.
+                </p>
+
+                {% if bike.availability %}
+                    <a href="{% url 'book_bike' bike.id %}" class="btn btn-dark w-100 btn-lg mt-2">
+                        <i class="fas fa-calendar-check me-2"></i> Book This Bike
+                    </a>
+                {% else %}
+                    <button class="btn btn-secondary w-100 btn-lg mt-2" disabled>Rented Out</button>
+                    <small class="text-danger d-block text-center mt-2">This bike is currently with another rider.</small>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="mt-3">
+            <a href="{% url 'index' %}" class="btn btn-outline-secondary w-100">
+                <i class="fas fa-arrow-left me-2"></i> Back to Fleet
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <div class="card shadow border-0">
+            <div class="card-header bg-white py-3">
+                <h4 class="mb-0">
+                    <i class="fas fa-comments me-2 text-primary"></i>Customer Reviews ({{ reviews.count }})
+                </h4>
+            </div>
+            <div class="card-body" style="max-height: 600px; overflow-y: auto;">
+                {% for review in reviews %}
+                <div class="mb-3 border-bottom pb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong class="fs-5">{{ review.user.first_name }}</strong>
+                        <span class="text-muted small">{{ review.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    
+                    <div class="text-warning mb-2">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= review.rating %}
+                                <i class="fas fa-star"></i>
+                            {% else %}
+                                <i class="far fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    
+                    <p class="mb-0 text-secondary" style="font-style: italic;">"{{ review.comment }}"</p>
+                </div>
+                {% empty %}
+                <div class="text-center py-5 text-muted">
+                    <i class="far fa-comment-dots fa-3x mb-3 text-secondary opacity-50"></i>
+                    <p class="fs-5">No reviews yet.</p>
+                    <p>Be the first to rent this bike and share your experience!</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

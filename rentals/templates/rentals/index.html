@@ -1,0 +1,121 @@
+{% extends 'rentals/base.html' %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+    <div class="bg-dark text-white rounded p-4 mb-4 mt-3 shadow" 
+         style="background: linear-gradient(to right, #141e30, #243b55);">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h2 class="fw-bold">Welcome back, {{ user.first_name }}! 👋</h2>
+                <p class="mb-0 text-white-50">Ready for your next adventure? Choose a bike and hit the road.</p>
+            </div>
+            <div class="col-md-4 text-end d-none d-md-block">
+                <i class="fas fa-biking fa-4x text-warning opacity-50"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3><i class="fas fa-motorcycle text-primary me-2"></i>Available Fleet</h3>
+    </div>
+
+    <div class="row">
+        {% for bike in bikes %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100 border-0" style="transition: transform 0.3s; overflow: hidden;">
+                
+                <div class="position-relative">
+                    <img src="{% if bike.image_url %}{{ bike.image_url }}{% else %}https://images.unsplash.com/photo-1558981806-ec527fa84c3d?auto=format&fit=crop&w=800&q=80{% endif %}" 
+                         class="card-img-top" 
+                         alt="{{ bike.make }}" 
+                         style="height: 220px; object-fit: cover;">
+                    
+                    <div class="position-absolute top-0 end-0 m-2">
+                        {% if bike.availability %}
+                            <span class="badge bg-success shadow">Available</span>
+                        {% else %}
+                            <span class="badge bg-danger shadow">Rented Out</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="position-absolute bottom-0 start-0 m-2">
+                        <span class="badge bg-warning text-dark shadow fs-6">
+                            ${{ bike.daily_rate }} / day
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title fw-bold mb-1">{{ bike.make }} {{ bike.model }}</h5>
+                    <p class="text-muted mb-3"><small>{{ bike.year }} Model</small></p>
+                    
+                    <ul class="list-unstyled mb-4 text-secondary small">
+                        <li><i class="fas fa-check-circle text-success me-2"></i>Premium Condition</li>
+                        <li><i class="fas fa-gas-pump text-warning me-2"></i>Full Tank</li>
+                        <li><i class="fas fa-road text-primary me-2"></i>Unlimited Kms</li>
+                    </ul>
+
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'bike_details' bike.id %}" class="btn btn-outline-primary fw-bold">
+                            View Details & Reviews
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+            <div class="col-12 text-center text-muted py-5">
+                <h4>No bikes found in the system.</h4>
+                <p>Please contact the administrator to add vehicles.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <style>
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important; }
+    </style>
+
+{% else %}
+    <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light shadow-lg" 
+         style="background-image: url('https://images.unsplash.com/photo-1558981403-c5f9899a28bc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); background-size: cover; background-position: center; height: 80vh; border-radius: 20px;">
+        
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.65);"></div>
+
+        <div class="col-md-6 p-lg-5 mx-auto my-5 position-relative text-white" style="z-index: 1;">
+            <h1 class="display-3 fw-bold mb-3">Speedy Bike Rental</h1>
+            <p class="lead fw-normal mb-5">Experience the freedom of the open road. Premium bikes at affordable hourly rates.</p>
+            
+            <div class="d-grid gap-3 d-sm-flex justify-content-sm-center mb-5">
+                <a class="btn btn-warning btn-lg px-4 gap-3 fw-bold shadow" href="{% url 'login' %}">
+                    Login
+                </a>
+                <a class="btn btn-outline-light btn-lg px-4 shadow" href="{% url 'register' %}">
+                    Create Account
+                </a>
+            </div>
+            
+            </div>
+    </div>
+
+    <div class="container mb-5">
+        <div class="row mt-5 text-center">
+            <div class="col-lg-4">
+                <div class="display-6 mb-3">⚡</div>
+                <h4>Fast Booking</h4>
+                <p class="text-muted">Book your favorite bike in less than 2 minutes.</p>
+            </div>
+            <div class="col-lg-4">
+                <div class="display-6 mb-3">🛡️</div>
+                <h4>Fully Insured</h4>
+                <p class="text-muted">Ride with peace of mind knowing you are covered.</p>
+            </div>
+            <div class="col-lg-4">
+                <div class="display-6 mb-3">💰</div>
+                <h4>Best Rates</h4>
+                <p class="text-muted">Competitive hourly and daily rates for all models.</p>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
